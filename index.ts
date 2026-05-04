@@ -5,7 +5,7 @@
  */
 
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
-import { registerPermissionControls } from "./permissions.js";
+import { registerPermissionControls } from "./src/permissions";
 
 export default function (pi: ExtensionAPI) {
 	registerPermissionControls(pi);

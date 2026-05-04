@@ -14,7 +14,8 @@
 		"lint": "biome lint .",
 		"format": "biome format --write .",
 		"check": "biome check --write .",
-		"lint:fix": "biome check --write ."
+		"lint:fix": "biome check --write . && bun x tsc --noEmit",
+		"typecheck": "bun x tsc --noEmit"
 	},
 	"dependencies": {
 		"pi-permission-system": "*"
