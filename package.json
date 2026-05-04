@@ -1,14 +1,29 @@
 {
-  "name": "pi-personal-ext",
-  "version": "1.0.0",
-  "keywords": ["pi-package"],
-  "type": "module",
-  "pi": {
-    "extensions": ["./index.ts"]
-  },
-  "dependencies": {},
-  "peerDependencies": {
-    "@mariozechner/pi-coding-agent": "*",
-    "@sinclair/typebox": "*"
-  }
+	"name": "pi-personal-ext",
+	"version": "1.0.0",
+	"keywords": [
+		"pi-package"
+	],
+	"type": "module",
+	"pi": {
+		"extensions": [
+			"./index.ts"
+		]
+	},
+	"scripts": {
+		"lint": "biome lint .",
+		"format": "biome format --write .",
+		"check": "biome check --write .",
+		"lint:fix": "biome check --write ."
+	},
+	"dependencies": {
+		"pi-permission-system": "*"
+	},
+	"peerDependencies": {
+		"@mariozechner/pi-coding-agent": "*",
+		"@sinclair/typebox": "*"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.4.13"
+	}
 }

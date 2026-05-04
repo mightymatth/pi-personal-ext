@@ -1,0 +1,202 @@
+{
+	"defaultPolicy": {
+		"tools": "ask",
+		"bash": "ask",
+		"mcp": "ask",
+		"skills": "ask",
+		"special": "ask"
+	},
+	// ---- Tools ----
+	// Pi built-in tools: read, write, edit, bash, ls, grep, find, mcp, task
+	"tools": {
+		"read": "allow",
+		"ls": "allow",
+		"grep": "allow",
+		"find": "allow",
+		"write": "ask",
+		"edit": "ask",
+		"bash": "ask",
+		"mcp": "ask"
+	},
+	// ---- Bash ----
+	// These mirror your Claude Code allowed bash commands
+	"bash": {
+		// Read-only / info commands — always allow
+		"ls": "allow",
+		"ls *": "allow",
+		"cat *": "allow",
+		"head *": "allow",
+		"tail *": "allow",
+		"find *": "allow",
+		"grep *": "allow",
+		"git status": "allow",
+		"git status *": "allow",
+		"git diff": "allow",
+		"git diff *": "allow",
+		"git log *": "allow",
+		"git branch *": "allow",
+		"git remote *": "allow",
+		"git add *": "allow",
+		"git rebase *": "allow",
+		"git stash *": "allow",
+		"curl *": "allow",
+		"unzip *": "allow",
+		// Yarn / build / test commands
+		"yarn test *": "allow",
+		"yarn test:*": "allow",
+		"yarn lint-staged *": "allow",
+		"yarn lint-staged:*": "allow",
+		"yarn workspace * test*": "allow",
+		"yarn npm info *": "allow",
+		"yarn why *": "allow",
+		"yarn install": "allow",
+		"yarn install *": "allow",
+		// Bun
+		"bun test *": "allow",
+		"bun test:*": "allow",
+		"bun run *": "allow",
+		"bun add *": "allow",
+		"bunx tsc *": "allow",
+		// UV / Python
+		"uv run *": "allow",
+		// GitHub CLI — read-only
+		"gh pr list *": "allow",
+		"gh pr view *": "allow",
+		"gh pr diff *": "allow",
+		"gh search *": "allow",
+		"gh issue view *": "allow",
+		"gh run view *": "allow",
+		// GitHub CLI — mutating (match your "ask" rules)
+		"gh api * --method POST*": "ask",
+		"gh api * --method PUT*": "ask",
+		"gh api * --method PATCH*": "ask",
+		"gh api * --method DELETE*": "ask",
+		"gh api * -X POST*": "ask",
+		"gh api * -X PUT*": "ask",
+		"gh api * -X PATCH*": "ask",
+		"gh api * -X DELETE*": "ask",
+		"gh api * -f *": "ask",
+		"gh api * -F *": "ask",
+		"gh api * --field *": "ask",
+		"gh api * --raw-field *": "ask",
+		// Other gh api calls — allow (read-only)
+		"gh api *": "allow",
+		// AWS read-only
+		"aws cloudformation describe-stack-events *": "allow",
+		"aws logs *": "allow",
+		"aws sts get-caller-identity": "allow",
+		"aws sts get-caller-identity *": "allow",
+		"aws lambda list-functions *": "allow",
+		// Stats / monitoring
+		"ccusage weekly *": "allow",
+		"/Users/matija.pevec/.bun/bin/ccusage blocks *": "allow",
+		"/Users/matija.pevec/ccstats.sh": "allow",
+		"~/ccstats.sh": "allow",
+		"~/.claude/ccstats.sh *": "allow",
+		// PM2 logs
+		"pm2 logs *": "allow",
+		// Playwright CLI
+		"playwright-cli open *": "allow",
+		"playwright-cli close *": "allow",
+		"playwright-cli snapshot *": "allow",
+		"playwright-cli resize *": "allow",
+		"playwright-cli eval *": "allow",
+		"npx playwright-cli *": "allow",
+		// NR logs
+		".claude/skills/nr-logs/scripts/nr-query.sh *": "allow",
+		// ---- Safety denies ----
+		"rm -rf *": "deny",
+		"rm -rf /": "deny",
+		"rm -rf ~": "deny",
+		"rm -rf ~/*": "deny",
+		"git push *": "ask",
+		"git push": "ask",
+		"git push --force *": "deny",
+		"sudo *": "ask",
+		"chmod *": "ask",
+		"chown *": "ask",
+		"mkfs *": "deny",
+		"dd *": "deny",
+		":() *": "deny"
+	},
+	// ---- MCP ----
+	// Map your Claude Code MCP tool permissions
+	"mcp": {
+		// GrabContent — full access
+		"GrabContent:*": "allow",
+		"GrabContent_get": "allow",
+		"GrabContent_setup-browser": "allow",
+		"grab-content-local_get": "allow",
+		"grab-content-local_setup-browser": "allow",
+		"grab-content-pbdot_get": "allow",
+		// MyCharging — full access to all MCP tools
+		"MyChargingPreview:*": "allow",
+		"MyChargingPreviewLocal:*": "allow",
+		"MyChargingPreviewLocal_get_entitlement": "allow",
+		"MyChargingPreviewLocal_query_subscriptions": "allow",
+		"MyChargingPreviewLocal_get_charging_sessions": "allow",
+		"MyChargingPreviewLocal_get_customer": "allow",
+		"MyChargingPreviewLocal_get_plans": "allow",
+		"MyChargingPreviewLocal_get_plan_details": "allow",
+		"MyChargingPreviewLocal_get_fulfillment": "allow",
+		"MyChargingPreview_query_subscriptions": "allow",
+		"MyChargingPreview_get_plans": "allow",
+		"MyChargingPreview_get_plan_details": "allow",
+		"MyChargingPreview_get_entitlement": "allow",
+		"MyChargingDev:*": "allow",
+		// Atlassian — read access (search, get issues/pages)
+		"atlassian:*": "allow",
+		"mcp-atlassian:*": "allow",
+		"porschedigital/atlassian-official:*": "allow",
+		// Playwright browser tools
+		"playwright:*": "allow",
+		"playwright_browser_navigate": "allow",
+		"playwright_browser_click": "allow",
+		"playwright_browser_snapshot": "allow",
+		"playwright_browser_evaluate": "allow",
+		"playwright_browser_run_code": "allow",
+		"playwright_browser_close": "allow",
+		"playwright_browser_console_messages": "allow",
+		"playwright_browser_wait_for": "allow",
+		// Chrome DevTools
+		"chrome-devtools:*": "allow",
+		"chrome_devtools_*": "allow",
+		// Context7
+		"context7:*": "allow",
+		"context7_resolve-library-id": "allow",
+		"context7_query-docs": "allow",
+		// Figma
+		"figma:*": "allow",
+		"figma_get_screenshot": "allow",
+		"figma_get_metadata": "allow",
+		"figma_get_design_context": "allow",
+		"figma-dev_get_design_context": "allow",
+		"figma-dev_get_screenshot": "allow",
+		"figma-dev_get_metadata": "allow",
+		"figma-dev_get_variable_defs": "allow",
+		// DeepWiki
+		"deepwiki:*": "allow",
+		"deepwiki_ask_question": "allow",
+		// IDE / diagnostics
+		"ide:*": "allow",
+		"ide_getDiagnostics": "allow",
+		// MCP baseline discovery — allow
+		"mcp_status": "allow",
+		"mcp_list": "allow",
+		"mcp_search": "allow",
+		"mcp_describe": "allow",
+		"mcp_connect": "allow"
+	},
+	// ---- Skills ----
+	"skills": {
+		"playwright-cli": "allow",
+		"skill-creator": "allow",
+		"*": "ask"
+	},
+	// ---- Special ----
+	"special": {
+		"doom_loop": "deny",
+		"external_directory": "ask",
+		"tool_call_limit": "ask"
+	}
+}
