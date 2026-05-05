@@ -12,7 +12,6 @@
       },
       "peerDependencies": {
         "@mariozechner/pi-coding-agent": "*",
-        "@sinclair/typebox": "*",
       },
     },
   },
