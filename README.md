@@ -15,6 +15,14 @@ pi install git:github.com:mightymatth/pi-personal-ext
 - `ctrl+shift+y` toggles permission mode immediately.
 - Add your custom tools, commands, and event handlers in `index.ts`.
 
+## Setup
+
+Install personal VS Code extensions and other tooling:
+
+```bash
+bun run ~/.pi/agent/extensions/pi-personal-ext/setup.ts
+```
+
 ## Development
 
 ```bash

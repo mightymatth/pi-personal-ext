@@ -1,0 +1,22 @@
+{
+  "name": "copy-file-reference",
+  "publisher": "local",
+  "version": "0.0.1",
+  "type": "module",
+  "engines": { "vscode": "^1.80.0" },
+  "activationEvents": ["*"],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      { "command": "copyFileReference.copy", "title": "Copy File Reference" }
+    ],
+    "keybindings": [
+      {
+        "command": "copyFileReference.copy",
+        "key": "ctrl+alt+c",
+        "mac": "ctrl+alt+c",
+        "when": "editorTextFocus"
+      }
+    ]
+  }
+}
