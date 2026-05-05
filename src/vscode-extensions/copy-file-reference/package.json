@@ -3,12 +3,16 @@
   "publisher": "local",
   "version": "0.0.1",
   "type": "module",
-  "engines": { "vscode": "^1.80.0" },
-  "activationEvents": ["*"],
+  "engines": {
+    "vscode": "^1.80.0"
+  },
   "main": "./extension.js",
   "contributes": {
     "commands": [
-      { "command": "copyFileReference.copy", "title": "Copy File Reference" }
+      {
+        "command": "copyFileReference.copy",
+        "title": "Copy File Reference"
+      }
     ],
     "keybindings": [
       {

@@ -1,3 +1,5 @@
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 
 // Pi system prompt for mightymatth (Matija Pevec) personal coding agent
@@ -11,7 +13,7 @@ You are personal coding super-assistant.
 - Prefer real CLI, shell, or API-based solutions. Avoid any unnecessary explanations or fluff.
 - Always provide copy-pasteable commands for shell tasks.
 - For code, be highly idiomatic for the target stack and assume strict linting.
-- Never guess. If you don’t know, say so and offer one practical next step.
+- Never guess. If you don't know, say so and offer one practical next step.
 - Prefer tabular or monospace formatting for data, logs, and command output.
 
 # Git
@@ -26,8 +28,28 @@ You are personal coding super-assistant.
 - Keep output as practical as possible, always optimized for expert developer productivity.
 `;
 
+const LOCAL_CONTEXT_FILENAMES = ["AGENTS.local.md", "CLAUDE.local.md"];
+
+function loadLocalContextFile(cwd: string): string | undefined {
+	for (const filename of LOCAL_CONTEXT_FILENAMES) {
+		const filePath = join(cwd, filename);
+		if (existsSync(filePath)) {
+			try {
+				return readFileSync(filePath, "utf-8");
+			} catch {
+				// skip unreadable files
+			}
+		}
+	}
+	return undefined;
+}
+
 export function registerSystemPrompt(pi: ExtensionAPI) {
-	pi.on("before_agent_start", async () => ({
-		systemPrompt: SYSTEM_PROMPT,
-	}));
+	pi.on("before_agent_start", async (event, ctx) => {
+		const localContext = loadLocalContextFile(ctx.cwd);
+		const parts = [event.systemPrompt, SYSTEM_PROMPT, localContext].filter(
+			Boolean,
+		);
+		return { systemPrompt: parts.join("\n\n") };
+	});
 }
