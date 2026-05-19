@@ -1,6 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
+import { getAgentDir } from "@mariozechner/pi-coding-agent";
 
 // Pi system prompt for mightymatth (Matija Pevec) personal coding agent
 
@@ -30,12 +31,14 @@ You are personal coding super-assistant.
 
 const LOCAL_CONTEXT_FILENAMES = ["AGENTS.local.md", "CLAUDE.local.md"];
 
-function loadLocalContextFile(cwd: string): string | undefined {
+function loadLocalContextFileFromDir(
+	dir: string,
+): { path: string; content: string } | undefined {
 	for (const filename of LOCAL_CONTEXT_FILENAMES) {
-		const filePath = join(cwd, filename);
+		const filePath = join(dir, filename);
 		if (existsSync(filePath)) {
 			try {
-				return readFileSync(filePath, "utf-8");
+				return { path: filePath, content: readFileSync(filePath, "utf-8") };
 			} catch {
 				// skip unreadable files
 			}
@@ -44,12 +47,45 @@ function loadLocalContextFile(cwd: string): string | undefined {
 	return undefined;
 }
 
+function loadLocalContextFiles(cwd: string): string[] {
+	const seenPaths = new Set<string>();
+	const files: { path: string; content: string }[] = [];
+
+	// 1. Global: ~/.pi/agent/AGENTS.local.md
+	const globalFile = loadLocalContextFileFromDir(getAgentDir());
+	if (globalFile) {
+		files.push(globalFile);
+		seenPaths.add(globalFile.path);
+	}
+
+	// 2. Walk up from cwd to root (outer-to-inner priority)
+	const ancestors: { path: string; content: string }[] = [];
+	let currentDir = resolve(cwd);
+	const root = resolve("/");
+	while (true) {
+		const file = loadLocalContextFileFromDir(currentDir);
+		if (file && !seenPaths.has(file.path)) {
+			ancestors.unshift(file);
+			seenPaths.add(file.path);
+		}
+		if (currentDir === root) break;
+		const parentDir = resolve(currentDir, "..");
+		if (parentDir === currentDir) break;
+		currentDir = parentDir;
+	}
+	files.push(...ancestors);
+
+	return files.map((f) => `## ${f.path}\n\n${f.content}`);
+}
+
 export function registerSystemPrompt(pi: ExtensionAPI) {
 	pi.on("before_agent_start", async (event, ctx) => {
-		const localContext = loadLocalContextFile(ctx.cwd);
-		const parts = [event.systemPrompt, SYSTEM_PROMPT, localContext].filter(
-			Boolean,
-		);
+		const localContextParts = loadLocalContextFiles(ctx.cwd);
+		const parts = [
+			event.systemPrompt,
+			SYSTEM_PROMPT,
+			...localContextParts,
+		].filter(Boolean);
 		return { systemPrompt: parts.join("\n\n") };
 	});
 }

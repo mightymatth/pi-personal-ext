@@ -68,6 +68,7 @@
 		"gh search *": "allow",
 		"gh issue view *": "allow",
 		"gh run view *": "allow",
+		"gh api *": "allow",
 		// GitHub CLI — mutating (match your "ask" rules)
 		"gh api * --method POST*": "ask",
 		"gh api * --method PUT*": "ask",
@@ -81,8 +82,10 @@
 		"gh api * -F *": "ask",
 		"gh api * --field *": "ask",
 		"gh api * --raw-field *": "ask",
-		// Other gh api calls — allow (read-only)
-		"gh api *": "allow",
+		"gh pr create *": "ask",
+		"gh pr edit *": "ask",
+		"gh pr merge *": "ask",
+		"gh pr close *": "ask",
 		// AWS read-only
 		"aws cloudformation describe-stack-events *": "allow",
 		"aws logs *": "allow",
