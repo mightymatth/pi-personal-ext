@@ -22,6 +22,6 @@ Personal pi coding agent extension. Lives at `~/.pi/agent/extensions/pi-personal
 # install dependencies
 bun i
 
-# Always run lint+fix after code or prompt changes!
-bun run lint:fix
+# Always run checks and fixes after code or prompt changes!
+bun run check:fix
 ```

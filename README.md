@@ -23,6 +23,19 @@ Install personal VS Code extensions and other tooling:
 bun run ~/.pi/agent/extensions/pi-personal-ext/setup.ts
 ```
 
+## Skills
+
+Skills in `skills/` are vendored from upstream repositories and can be refreshed on demand:
+
+```bash
+bun run skills list
+bun run skills update
+# or only one skill
+bun run skills update opensrc
+```
+
+Edit `skills.ts` to add or change skill sources.
+
 ## Development
 
 ```bash
