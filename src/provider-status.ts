@@ -29,7 +29,8 @@ type ProviderStatusConfig = {
 };
 
 const CODEX_QUERY_TIMEOUT_MS = 8_000;
-const QUERY_RETRY_MS = 30_000;
+const QUERY_RETRY_MS = 15_000;
+const RESPONSE_REFRESH_MS = 15_000;
 const NORMAL_REFRESH_MS = 15 * 60_000;
 const MEDIUM_USAGE_REFRESH_MS = 5 * 60_000;
 const HIGH_USAGE_REFRESH_MS = 2 * 60_000;
@@ -337,7 +338,19 @@ export function registerProviderStatus(pi: ExtensionAPI) {
 		transportStatus =
 			event.status === 429 ? getRetryStatus(event.headers) : undefined;
 		render(ctx);
-		refresh(ctx, event.status === 429);
+		if (
+			event.status === 429 ||
+			Date.now() - lastSuccessAt >= RESPONSE_REFRESH_MS
+		) {
+			refresh(ctx, true);
+		}
+	});
+
+	pi.on("agent_end", async (_event, ctx) => {
+		if (!activeProvider) return;
+		if (Date.now() - lastSuccessAt >= RESPONSE_REFRESH_MS) {
+			refresh(ctx, true);
+		}
 	});
 
 	for (const provider of PROVIDERS) {

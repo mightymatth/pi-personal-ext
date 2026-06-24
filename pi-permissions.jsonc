@@ -156,9 +156,9 @@
 	},
 	// ---- Skills ----
 	"skills": {
+		"*": "ask",
 		"playwright-cli": "allow",
-		"skill-creator": "allow",
-		"*": "ask"
+		"skill-creator": "allow"
 	},
 	// ---- Special ----
 	"special": {
