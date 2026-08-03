@@ -8,7 +8,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 import { registerPermissionControls } from "./src/permissions";
-import { registerProviderStatus } from "./src/provider-status";
+import { registerProviderStatus } from "./src/provider-status/index";
 import { registerSounds } from "./src/sounds";
 import { registerSystemPrompt } from "./src/system-prompt";
 
