@@ -329,6 +329,11 @@ export function registerProviderStatus(pi: ExtensionAPI) {
 		selectProvider(ctx, ctx.model?.provider);
 	});
 
+	pi.on("session_shutdown", async () => {
+		generation++;
+		inFlight = undefined;
+	});
+
 	pi.on("model_select", async (event, ctx) => {
 		selectProvider(ctx, event.model.provider);
 	});
