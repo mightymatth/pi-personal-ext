@@ -6,6 +6,8 @@ import { $ } from "bun";
 import { Command } from "commander";
 
 const skills: Record<string, string> = {
+	grilling:
+		"https://github.com/mattpocock/skills/tree/main/skills/productivity/grilling",
 	opensrc: "https://github.com/vercel-labs/opensrc/tree/main/skills/opensrc",
 	"playwright-cli":
 		"https://github.com/microsoft/playwright-cli/tree/main/skills/playwright-cli",
