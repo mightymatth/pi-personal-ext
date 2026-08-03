@@ -14,6 +14,7 @@ import { registerSystemPrompt } from "./src/system-prompt";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const SKILLS_DIR = resolve(__dirname, "skills");
+const PROMPTS_DIR = resolve(__dirname, "prompts");
 
 export default function (pi: ExtensionAPI) {
 	registerSystemPrompt(pi);
@@ -25,6 +26,7 @@ export default function (pi: ExtensionAPI) {
 	pi.on("resources_discover", async (_event, _ctx) => {
 		return {
 			skillPaths: [SKILLS_DIR],
+			promptPaths: [PROMPTS_DIR],
 		};
 	});
 }
