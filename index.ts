@@ -12,6 +12,9 @@ import { registerProviderStatus } from "./src/provider-status/index";
 import { registerSounds } from "./src/sounds";
 import { registerSystemPrompt } from "./src/system-prompt";
 
+// Suppress MCP App windows; MCP tool results remain available inline.
+process.env.MCP_UI_VIEWER = "none";
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const SKILLS_DIR = resolve(__dirname, "skills");
 const PROMPTS_DIR = resolve(__dirname, "prompts");
