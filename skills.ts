@@ -11,6 +11,7 @@ const skills: Record<string, string> = {
 	opensrc: "https://github.com/vercel-labs/opensrc/tree/main/skills/opensrc",
 	"playwright-cli":
 		"https://github.com/microsoft/playwright-cli/tree/main/skills/playwright-cli",
+	herdr: "https://github.com/herdrdev/herdr/tree/master/skills/herdr",
 };
 
 const rootDir = import.meta.dir;
