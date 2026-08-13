@@ -21,6 +21,7 @@
 		"check": "biome check . && bun tsc --noEmit",
 		"check:fix": "biome check --write . && bun tsc --noEmit",
 		"lint:fix": "bun run check:fix",
+		"test": "bun test",
 		"skills": "bun run skills.ts"
 	},
 	"dependencies": {
