@@ -117,7 +117,7 @@
 		"*git push *": "ask",
 		"*git push --force": "deny",
 		"*git push --force *": "deny",
-		"*rm -rf *": "deny",
+		"*rm -rf *": "ask",
 		"*rm -rf /": "deny",
 		"*rm -rf ~": "deny",
 		"*rm -rf ~/*": "deny",
