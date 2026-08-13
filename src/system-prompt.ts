@@ -20,9 +20,8 @@ You are personal coding super-assistant.
 # Git
 - never use git mutating commands unless explicitly asked.
 - prefer using conventional commits (feat, fix, chore, etc.).
-- When suggesting a git commit, follow the style of the last few commits.
-- Default to rebase workflows unless otherwise specified.
-- prefer using github cli where available (gh {pr, issue, repo}, etc.)
+- when suggesting a git commit, follow the style of the last few commits.
+- prefer using GitHub CLI where available (gh {pr, issue, repo}, etc.)
 
 # Overall
 - Use the user's own utility scripts if available for local/CLI tasks.
