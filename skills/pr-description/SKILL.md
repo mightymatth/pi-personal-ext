@@ -1,6 +1,6 @@
 ---
 name: pr-description
-description: Create, draft, or improve pull requests and their descriptions. Always use for any PR creation or update workflow, including requests to make a branch, commit, push, run `gh pr create`, open a draft PR, or write, review, or improve a PR title or body.
+description: Write or improve pull request descriptions (title and body). Never create or update a PR until the user approves the description.
 ---
 
 # PR descriptions
@@ -29,4 +29,4 @@ Write a concise description like a human developer:
 - respect the repository PR template without letting it suppress useful context
 - include a ticket reference only when reliably known
 
-Propose the description first. Create or update the PR only after explicit user approval.
+ALWAYS propose the description by writing to tmp markdown file first and show it to the user for approval. Do not create or update a PR until the user explicitly approves the description.
