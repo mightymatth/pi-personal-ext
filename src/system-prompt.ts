@@ -2,6 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 import { getAgentDir } from "@mariozechner/pi-coding-agent";
+import codeQualityPrompt from "./prompts/code-quality";
 
 // Pi system prompt for mightymatth (Matija Pevec) personal coding agent
 
@@ -84,6 +85,7 @@ export function registerSystemPrompt(pi: ExtensionAPI) {
 		const parts = [
 			event.systemPrompt,
 			SYSTEM_PROMPT,
+			codeQualityPrompt,
 			...localContextParts,
 		].filter(Boolean);
 		return { systemPrompt: parts.join("\n\n") };
