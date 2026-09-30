@@ -11,8 +11,8 @@ import { fileURLToPath } from "node:url";
 import type {
 	ExtensionAPI,
 	ExtensionContext,
-} from "@mariozechner/pi-coding-agent";
-import { getAgentDir } from "@mariozechner/pi-coding-agent";
+} from "@earendil-works/pi-coding-agent";
+import { getAgentDir } from "@earendil-works/pi-coding-agent";
 import {
 	getPiPermissionSystemRuntimeApi,
 	type YoloModeControlResult,
