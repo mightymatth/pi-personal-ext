@@ -12,6 +12,10 @@
 			{
 				"command": "copyFileReference.copy",
 				"title": "Copy File Reference"
+			},
+			{
+				"command": "copyFileReference.copyWithSelection",
+				"title": "Copy File Reference with Selection"
 			}
 		],
 		"keybindings": [
@@ -19,6 +23,12 @@
 				"command": "copyFileReference.copy",
 				"key": "ctrl+alt+c",
 				"mac": "ctrl+alt+c",
+				"when": "editorTextFocus"
+			},
+			{
+				"command": "copyFileReference.copyWithSelection",
+				"key": "ctrl+alt+shift+c",
+				"mac": "ctrl+alt+shift+c",
 				"when": "editorTextFocus"
 			}
 		]

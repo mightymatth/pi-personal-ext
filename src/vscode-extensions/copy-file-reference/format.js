@@ -15,17 +15,13 @@ export function formatFileReference(relativePath, selection) {
 }
 
 export function formatCopyText(relativePath, selection, selectedText) {
-	const { first, last } = getSelectionLines(selection);
-	const isWholeLineSelection =
-		!selection.isEmpty &&
-		selection.start.character === 0 &&
-		selection.end.character === 0;
-	const shouldIncludeExcerpt =
-		!selection.isEmpty && first === last && !isWholeLineSelection;
 	const reference = formatFileReference(relativePath, selection);
+	if (selection.isEmpty) return reference;
 
-	if (!shouldIncludeExcerpt) return reference;
-
-	const excerpt = selectedText.replace(/\r?\n$/, "");
-	return `${reference}\n\n> ${excerpt}`;
+	const excerpt = selectedText
+		.replace(/\r?\n$/, "")
+		.split(/\r?\n/)
+		.map((line) => `> ${line}`)
+		.join("\n");
+	return `${reference}\n\n${excerpt}`;
 }
