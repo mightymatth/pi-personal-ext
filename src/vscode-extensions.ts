@@ -1,58 +1,48 @@
-/**
- * Installs local VS Code extensions by symlinking them
- * into ~/.vscode/extensions/
- *
- * Extensions live as real files under src/vscode-extensions/<name>/
- */
-
-import { readdirSync } from "node:fs";
-import { lstat, readlink, symlink, unlink } from "node:fs/promises";
+import {
+	lstat,
+	mkdir,
+	readdir,
+	readlink,
+	symlink,
+	unlink,
+} from "node:fs/promises";
 import { homedir } from "node:os";
 import { join, resolve } from "node:path";
 
-const EXTENSIONS_SRC = resolve(
-	import.meta.dirname ?? __dirname,
-	"vscode-extensions",
-);
-const VSCODE_EXT_DIR = join(homedir(), ".vscode", "extensions");
+export async function installAll({
+	dryRun = false,
+}: {
+	dryRun?: boolean;
+} = {}): Promise<void> {
+	const sourceDir = join(import.meta.dir, "vscode-extensions");
+	const destinationDir = join(homedir(), ".vscode", "extensions");
+	const entries = await readdir(sourceDir, { withFileTypes: true });
 
-async function isSymlinkTo(path: string, target: string): Promise<boolean> {
-	try {
-		const stat = await lstat(path);
-		if (!stat.isSymbolicLink()) return false;
-		const existing = await readlink(path);
-		return resolve(existing) === resolve(target);
-	} catch {
-		return false;
+	if (!dryRun) await mkdir(destinationDir, { recursive: true });
+
+	for (const entry of entries) {
+		if (!entry.isDirectory()) continue;
+		const source = join(sourceDir, entry.name);
+		const destination = join(destinationDir, `local.${entry.name}`);
+
+		try {
+			const existing = await lstat(destination);
+			if (!existing.isSymbolicLink()) {
+				throw new Error(
+					`Refusing to replace an existing VS Code extension: ${destination}`,
+				);
+			}
+			const target = await readlink(destination);
+			if (resolve(destinationDir, target) === source) {
+				console.log(`Already linked: ${destination}`);
+				continue;
+			}
+			if (!dryRun) await unlink(destination);
+		} catch (error) {
+			if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+		}
+
+		console.log(`Link: ${destination} -> ${source}`);
+		if (!dryRun) await symlink(source, destination, "dir");
 	}
-}
-
-async function linkExtension(name: string): Promise<void> {
-	const src = join(EXTENSIONS_SRC, name);
-	const dest = join(VSCODE_EXT_DIR, `local.${name}`);
-
-	if (await isSymlinkTo(dest, src)) {
-		console.log(`  [skip] ${name} (already linked)`);
-		return;
-	}
-
-	// Remove stale link/dir if exists
-	try {
-		await unlink(dest);
-	} catch {}
-
-	await symlink(src, dest, "dir");
-	console.log(`  [link] ${name} -> ${dest}`);
-}
-
-export async function installAll(): Promise<void> {
-	const extensions = readdirSync(EXTENSIONS_SRC, { withFileTypes: true })
-		.filter((d) => d.isDirectory())
-		.map((d) => d.name);
-
-	console.log("==> Linking VS Code extensions");
-	for (const ext of extensions) {
-		await linkExtension(ext);
-	}
-	console.log("==> Done. Reload VS Code to activate.");
 }

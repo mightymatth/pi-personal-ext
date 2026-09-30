@@ -1,0 +1,16 @@
+{
+	"codemode": {
+		"mode": "on"
+	},
+	"transport": "auto",
+	"enableInstallTelemetry": true,
+	"defaultProjectTrust": "ask",
+	"tuiMode": "fullscreen",
+	"compaction": {
+		"enabled": true
+	},
+	"outputPad": 0,
+	"enableSkillCommands": true,
+	"editorPaddingX": 0,
+	"fullscreenCopyOnSelect": false
+}
