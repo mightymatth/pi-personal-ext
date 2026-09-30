@@ -6,7 +6,8 @@
 
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { registerJevBrowser } from "./src/jev-browser/index";
 import { registerPermissionControls } from "./src/permissions";
 import { registerProviderStatus } from "./src/provider-status/index";
 import { registerSounds } from "./src/sounds";
@@ -22,6 +23,7 @@ const PROMPTS_DIR = resolve(__dirname, "prompts");
 export default function (pi: ExtensionAPI) {
 	registerSystemPrompt(pi);
 	registerSounds(pi);
+	registerJevBrowser(pi);
 	registerPermissionControls(pi);
 	registerProviderStatus(pi);
 
