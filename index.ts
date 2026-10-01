@@ -11,6 +11,7 @@ import { registerPermissionControls } from "./src/permissions";
 import { registerProviderStatus } from "./src/provider-status/index";
 import { registerSounds } from "./src/sounds";
 import { registerSystemPrompt } from "./src/system-prompt";
+import { registerGithubPrSelection } from "./src/tools/github-pr-selection";
 
 // Suppress MCP App windows; MCP tool results remain available inline.
 process.env.MCP_UI_VIEWER = "none";
@@ -35,6 +36,7 @@ export default function (pi: ExtensionAPI) {
 		if (!tools.includes("codemode")) pi.setActiveTools([...tools, "codemode"]);
 	});
 
+	registerGithubPrSelection(pi);
 	registerSystemPrompt(pi);
 	registerSounds(pi);
 	registerPermissionControls(pi);
