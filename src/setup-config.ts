@@ -15,12 +15,7 @@ export function registerLocalPackage(
 		const isBundledDependency = bundledDependencies.some(
 			(name) => source === `npm:${name}` || source.startsWith(`npm:${name}@`),
 		);
-		// Migrate the installation documented before local-checkout setup.
-		const isPreviousInstallation =
-			/^git:github\.com[:/]mightymatth\/pi-personal-ext(?:\.git)?(?:@.*)?$/.test(
-				source,
-			);
-		return !isBundledDependency && !isPreviousInstallation;
+		return !isBundledDependency;
 	});
 	if (
 		!registered.some(

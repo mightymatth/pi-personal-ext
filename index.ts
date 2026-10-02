@@ -17,7 +17,6 @@ import { registerGithubPrSelection } from "./src/tools/github-pr-selection";
 process.env.MCP_UI_VIEWER = "none";
 
 export default function (pi: ExtensionAPI) {
-	// Auto-discovery under extensions/ does not load package skills or prompts.
 	const root = dirname(fileURLToPath(import.meta.url));
 	pi.on("resources_discover", () => ({
 		skillPaths: [join(root, "skills")],
