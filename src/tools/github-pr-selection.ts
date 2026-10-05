@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
-import { Type } from "@mariozechner/pi-ai";
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
+import { Type } from "@earendil-works/pi-ai";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 
 function readPatch(patch: string, side: string): Map<number, string> {
 	const lines = new Map<number, string>();

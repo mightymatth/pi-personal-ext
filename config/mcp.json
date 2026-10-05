@@ -1,0 +1,23 @@
+{
+	"mcpServers": {
+		"grab_content_local": {
+			"url": "http://localhost:17475/mcp",
+			"exposure": "direct",
+			"enabled": false
+		},
+		"playwright": {
+			"command": "npx",
+			"args": [
+				"-y",
+				"@playwright/mcp@latest",
+				"--cdp-endpoint",
+				"ws://localhost:9222"
+			],
+			"exposure": "codemode"
+		},
+		"notion": {
+			"url": "https://mcp.notion.com/mcp",
+			"exposure": "codemode"
+		}
+	}
+}

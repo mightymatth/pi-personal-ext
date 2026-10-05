@@ -6,7 +6,11 @@
 
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
+import type {
+	ExtensionAPI,
+	McpServerConfig,
+} from "@earendil-works/pi-coding-agent";
+import { mcpServers } from "./config/mcp.json";
 import { registerPermissionControls } from "./src/permissions";
 import { registerProviderStatus } from "./src/provider-status/index";
 import { registerSounds } from "./src/sounds";
@@ -17,6 +21,10 @@ import { registerGithubPrSelection } from "./src/tools/github-pr-selection";
 process.env.MCP_UI_VIEWER = "none";
 
 export default function (pi: ExtensionAPI) {
+	for (const [name, config] of Object.entries(mcpServers)) {
+		pi.registerMcpServer(name, config as McpServerConfig);
+	}
+
 	const root = dirname(fileURLToPath(import.meta.url));
 	pi.on("resources_discover", () => ({
 		skillPaths: [join(root, "skills")],

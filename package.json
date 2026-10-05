@@ -31,16 +31,16 @@
 		"skills": "bun run skills.ts"
 	},
 	"dependencies": {
-		"commander": "^14.0.3",
-		"pi-permission-system": "*",
-		"pi-web-access": "*"
+		"commander": "^15.0.0",
+		"pi-permission-system": "^0.8.0",
+		"pi-web-access": "^0.36.0"
 	},
 	"bundledDependencies": [
 		"pi-permission-system",
 		"pi-web-access"
 	],
 	"peerDependencies": {
-		"@mariozechner/pi-coding-agent": "*"
+		"@earendil-works/pi-coding-agent": "^1.0.3"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.4.13",

@@ -22,6 +22,7 @@ bun run setup --dry-run
 
 ## MCP
 
+MCP servers are defined in `config/mcp.json` and registered when the extension loads.
 Built-in MCP is the default. `pi-mcp-adapter` is not bundled; projects can enable
 it where server compatibility requires it.
 
