@@ -64,7 +64,7 @@ export function registerProviderStatus(pi: ExtensionAPI) {
 		lastAttemptAt = now;
 		inFlight = (async () => {
 			try {
-				const next = await provider.query();
+				const next = await provider.query(ctx);
 				if (
 					!next ||
 					refreshGeneration !== generation ||
@@ -169,7 +169,7 @@ export function registerProviderStatus(pi: ExtensionAPI) {
 			description: `Show ${provider.usageLabel} usage (windows, pace, resets)`,
 			handler: async (_args, ctx) => {
 				try {
-					const next = await provider.query();
+					const next = await provider.query(ctx);
 					if (!next) {
 						ctx.ui.notify(`${provider.usageLabel}: usage unavailable`, "error");
 						return;

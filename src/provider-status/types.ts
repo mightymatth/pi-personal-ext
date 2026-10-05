@@ -23,6 +23,6 @@ export type ProviderStatusConfig = {
 	statusKey: string;
 	usageLabel: string;
 	usageCommand?: string;
-	query: () => Promise<RateLimitSnapshot | undefined>;
+	query: (ctx: ExtensionContext) => Promise<RateLimitSnapshot | undefined>;
 	register?: (pi: ExtensionAPI, onSnapshot: ProviderSnapshotHandler) => void;
 };
