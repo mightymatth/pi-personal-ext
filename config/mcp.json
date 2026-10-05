@@ -1,10 +1,5 @@
 {
 	"mcpServers": {
-		"grab_content_local": {
-			"url": "http://localhost:17475/mcp",
-			"exposure": "direct",
-			"enabled": false
-		},
 		"playwright": {
 			"command": "npx",
 			"args": [

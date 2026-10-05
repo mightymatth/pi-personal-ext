@@ -92,12 +92,6 @@
 		"aws sts get-caller-identity": "allow",
 		"aws sts get-caller-identity *": "allow",
 		"aws lambda list-functions *": "allow",
-		// Stats / monitoring
-		"ccusage weekly *": "allow",
-		"/Users/matija.pevec/.bun/bin/ccusage blocks *": "allow",
-		"/Users/matija.pevec/ccstats.sh": "allow",
-		"~/ccstats.sh": "allow",
-		"~/.claude/ccstats.sh *": "allow",
 		// PM2 logs
 		"pm2 logs *": "allow",
 		// Playwright CLI
@@ -107,8 +101,6 @@
 		"playwright-cli resize *": "allow",
 		"playwright-cli eval *": "allow",
 		"npx playwright-cli *": "allow",
-		// NR logs
-		".claude/skills/nr-logs/scripts/nr-query.sh *": "allow",
 		// ---- Safety denies ----
 		"*sudo *": "ask",
 		"*chmod *": "ask",
@@ -129,16 +121,8 @@
 	// ---- MCP ----
 	// Map your Claude Code MCP tool permissions
 	"mcp": {
-		// Grab Content
-		"grab_content_local_*": "allow",
 		// Playwright
 		"playwright:*": "allow",
-		// Chrome DevTools
-		"chrome-devtools:*": "allow",
-		"chrome_devtools_*": "allow",
-		// Context7
-		"context7_resolve-library-id": "allow",
-		"context7_query-docs": "allow",
 		// Figma
 		"figma_get_*": "allow",
 		// DeepWiki
