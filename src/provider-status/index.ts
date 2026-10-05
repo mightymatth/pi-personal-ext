@@ -1,5 +1,6 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { codexProvider } from "./codex";
+import { copilotProvider } from "./copilot";
 import {
 	errorText,
 	formatFooter,
@@ -17,7 +18,11 @@ import type {
 const QUERY_RETRY_MS = 15_000;
 const RESPONSE_REFRESH_MS = 15_000;
 
-const PROVIDERS: ProviderStatusConfig[] = [codexProvider, openCodeProvider];
+const PROVIDERS: ProviderStatusConfig[] = [
+	codexProvider,
+	copilotProvider,
+	openCodeProvider,
+];
 
 export function registerProviderStatus(pi: ExtensionAPI) {
 	let activeProvider: ProviderStatusConfig | undefined;
