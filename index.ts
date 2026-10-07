@@ -10,6 +10,7 @@ import type {
 } from "@earendil-works/pi-coding-agent";
 import { mcpServers } from "./config/mcp.json";
 import { registerPermissionControls } from "./src/permissions";
+import { registerPersonalSetup } from "./src/personal-setup";
 import { registerProviderStatus } from "./src/provider-status/index";
 import { registerSounds } from "./src/sounds";
 import { registerSystemPrompt } from "./src/system-prompt";
@@ -35,6 +36,7 @@ export default function (pi: ExtensionAPI) {
 		if (!tools.includes("codemode")) pi.setActiveTools([...tools, "codemode"]);
 	});
 
+	registerPersonalSetup(pi);
 	registerGithubPrSelection(pi);
 	registerSystemPrompt(pi);
 	registerSounds(pi);

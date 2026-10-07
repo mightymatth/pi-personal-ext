@@ -5,20 +5,12 @@ Personal Pi extensions, settings, skills, prompts, and VS Code extensions.
 ## Installation
 
 ```bash
-git clone https://github.com/mightymatth/pi-personal-ext.git \
-  "${PI_CODING_AGENT_DIR:-$HOME/.pi/agent}/extensions/pi-personal-ext"
-cd "${PI_CODING_AGENT_DIR:-$HOME/.pi/agent}/extensions/pi-personal-ext"
-bun install
-bun run setup
+pi install git:github.com/mightymatth/pi-personal-ext
 ```
 
-Setup registers the local package, merges `config/settings.json`, removes duplicate
-permission/web package declarations, and links the bundled VS Code extensions.
-Existing settings are backed up; unrelated preferences and credentials are preserved.
+Run `/personal-setup`.
 
-```bash
-bun run setup --dry-run
-```
+For a checkout you intend to edit, use the development installation below instead.
 
 ## MCP
 
@@ -36,9 +28,25 @@ bun run skills update
 bun run skills update opensrc
 ```
 
-## Development
+## Installation for development
+
+Clone a local checkout and register it with Pi:
+
+```bash
+git clone https://github.com/mightymatth/pi-personal-ext.git ~/dev/pi-personal-ext
+cd ~/dev/pi-personal-ext
+bun install
+bun run setup --local-path "$PWD"
+```
+
+Setup registers this checkout, installs missing companion extensions, and links
+the bundled VS Code extensions. Use `--dry-run` to preview changes.
+
+After making changes:
 
 ```bash
 bun run check:fix
 bun test
 ```
+
+Run `/reload` in Pi to load your changes.

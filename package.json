@@ -1,15 +1,17 @@
 {
 	"name": "pi-personal-ext",
 	"version": "1.0.0",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/mightymatth/pi-personal-ext.git"
+	},
 	"keywords": [
 		"pi-package"
 	],
 	"type": "module",
 	"pi": {
 		"extensions": [
-			"./index.ts",
-			"./node_modules/pi-permission-system/index.ts",
-			"./node_modules/pi-web-access/index.ts"
+			"./index.ts"
 		],
 		"skills": [
 			"./skills"
@@ -31,14 +33,8 @@
 		"skills": "bun run skills.ts"
 	},
 	"dependencies": {
-		"commander": "^15.0.0",
-		"pi-permission-system": "^0.8.0",
-		"pi-web-access": "^0.36.0"
+		"commander": "^15.0.0"
 	},
-	"bundledDependencies": [
-		"pi-permission-system",
-		"pi-web-access"
-	],
 	"peerDependencies": {
 		"@earendil-works/pi-coding-agent": "^1.0.3"
 	},
