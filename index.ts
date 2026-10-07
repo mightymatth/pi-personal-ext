@@ -4,8 +4,6 @@
  * Your personal pi coding agent extension.
  */
 
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
 import type {
 	ExtensionAPI,
 	McpServerConfig,
@@ -24,12 +22,6 @@ export default function (pi: ExtensionAPI) {
 	for (const [name, config] of Object.entries(mcpServers)) {
 		pi.registerMcpServer(name, config as McpServerConfig);
 	}
-
-	const root = dirname(fileURLToPath(import.meta.url));
-	pi.on("resources_discover", () => ({
-		skillPaths: [join(root, "skills")],
-		promptPaths: [join(root, "prompts")],
-	}));
 
 	pi.on("session_start", (_event, ctx) => {
 		if (!pi.getAllTools().some((tool) => tool.name === "codemode")) {
