@@ -1,6 +1,6 @@
 import { spawn } from "node:child_process";
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
-import { getPiPermissionSystemRuntimeApi } from "pi-permission-system";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { getYoloMode } from "./permissions";
 
 const FINISHED_SOUND = "/System/Library/Sounds/Glass.aiff";
 const INPUT_NEEDED_SOUND = "/System/Library/Sounds/Ping.aiff";
@@ -27,10 +27,6 @@ function playInputNeededSound(): void {
 	playSound(INPUT_NEEDED_SOUND);
 }
 
-function isYoloMode(): boolean {
-	return getPiPermissionSystemRuntimeApi()?.getYoloMode() ?? false;
-}
-
 export function registerSounds(pi: ExtensionAPI): void {
 	// Pi lifecycle equivalent of Claude Code's Stop hook.
 	pi.on("agent_end", () => {
@@ -41,7 +37,7 @@ export function registerSounds(pi: ExtensionAPI): void {
 	// permission system so permission-gated tool calls ping before its select()
 	// dialog waits for user input.
 	pi.on("tool_call", () => {
-		if (isYoloMode()) return;
+		if (getYoloMode()) return;
 		playInputNeededSound();
 	});
 }

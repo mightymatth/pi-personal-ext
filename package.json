@@ -7,13 +7,19 @@
 	"type": "module",
 	"pi": {
 		"extensions": [
-			"./index.ts"
+			"./index.ts",
+			"./node_modules/pi-permission-system/index.ts",
+			"./node_modules/pi-web-access/index.ts"
 		],
 		"skills": [
 			"./skills"
+		],
+		"prompts": [
+			"./prompts"
 		]
 	},
 	"scripts": {
+		"setup": "bun run setup.ts",
 		"format": "biome format --write .",
 		"lint": "biome lint .",
 		"fix": "biome check --write .",
@@ -25,11 +31,16 @@
 		"skills": "bun run skills.ts"
 	},
 	"dependencies": {
-		"commander": "^14.0.3",
-		"pi-permission-system": "*"
+		"commander": "^15.0.0",
+		"pi-permission-system": "^0.8.0",
+		"pi-web-access": "^0.36.0"
 	},
+	"bundledDependencies": [
+		"pi-permission-system",
+		"pi-web-access"
+	],
 	"peerDependencies": {
-		"@mariozechner/pi-coding-agent": "*"
+		"@earendil-works/pi-coding-agent": "^1.0.3"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.4.13",

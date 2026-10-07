@@ -1,50 +1,44 @@
 # pi-personal-ext
 
-mightymatth's personal pi coding agent extension.
-
-<!-- permission test -->
+Personal Pi extensions, settings, skills, prompts, and VS Code extensions.
 
 ## Installation
 
 ```bash
-pi install git:github.com:mightymatth/pi-personal-ext
+git clone https://github.com/mightymatth/pi-personal-ext.git \
+  "${PI_CODING_AGENT_DIR:-$HOME/.pi/agent}/extensions/pi-personal-ext"
+cd "${PI_CODING_AGENT_DIR:-$HOME/.pi/agent}/extensions/pi-personal-ext"
+bun install
+bun run setup
 ```
 
-## Features
-
-- `ctrl+shift+y` toggles permission mode immediately.
-- Add your custom tools, commands, and event handlers in `index.ts`.
-
-## Setup
-
-Install personal VS Code extensions and other tooling:
+Setup registers the local package, merges `config/settings.json`, removes duplicate
+permission/web package declarations, and links the bundled VS Code extensions.
+Existing settings are backed up; unrelated preferences and credentials are preserved.
 
 ```bash
-bun run ~/.pi/agent/extensions/pi-personal-ext/setup.ts
+bun run setup --dry-run
 ```
+
+## MCP
+
+MCP servers are defined in `config/mcp.json` and registered when the extension loads.
+Built-in MCP is the default. `pi-mcp-adapter` is not bundled; projects can enable
+it where server compatibility requires it.
 
 ## Skills
 
-Skills in `skills/` are vendored from upstream repositories and can be refreshed on demand:
+Vendored skills and their upstream sources are defined in `skills.ts`.
 
 ```bash
 bun run skills list
 bun run skills update
-# or only one skill
 bun run skills update opensrc
 ```
-
-Edit `skills.ts` to add or change skill sources.
 
 ## Development
 
 ```bash
-# Edit your extension
-vim ~/.pi/agent/extensions/pi-personal-ext/index.ts
-
-# Reload to pick up changes
-/reload
-
-# follow this guide during development
-# pi-coding-agent/docs/extensions.md
+bun run check:fix
+bun test
 ```

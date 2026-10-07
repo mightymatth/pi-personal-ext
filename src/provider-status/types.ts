@@ -1,4 +1,4 @@
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 
 export type ExtensionContext = Parameters<Parameters<ExtensionAPI["on"]>[1]>[1];
 
@@ -23,6 +23,6 @@ export type ProviderStatusConfig = {
 	statusKey: string;
 	usageLabel: string;
 	usageCommand?: string;
-	query: () => Promise<RateLimitSnapshot | undefined>;
+	query: (ctx: ExtensionContext) => Promise<RateLimitSnapshot | undefined>;
 	register?: (pi: ExtensionAPI, onSnapshot: ProviderSnapshotHandler) => void;
 };

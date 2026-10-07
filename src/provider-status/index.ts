@@ -1,5 +1,6 @@
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { codexProvider } from "./codex";
+import { copilotProvider } from "./copilot";
 import {
 	errorText,
 	formatFooter,
@@ -17,7 +18,11 @@ import type {
 const QUERY_RETRY_MS = 15_000;
 const RESPONSE_REFRESH_MS = 15_000;
 
-const PROVIDERS: ProviderStatusConfig[] = [codexProvider, openCodeProvider];
+const PROVIDERS: ProviderStatusConfig[] = [
+	codexProvider,
+	copilotProvider,
+	openCodeProvider,
+];
 
 export function registerProviderStatus(pi: ExtensionAPI) {
 	let activeProvider: ProviderStatusConfig | undefined;
@@ -64,7 +69,7 @@ export function registerProviderStatus(pi: ExtensionAPI) {
 		lastAttemptAt = now;
 		inFlight = (async () => {
 			try {
-				const next = await provider.query();
+				const next = await provider.query(ctx);
 				if (
 					!next ||
 					refreshGeneration !== generation ||
@@ -169,7 +174,7 @@ export function registerProviderStatus(pi: ExtensionAPI) {
 			description: `Show ${provider.usageLabel} usage (windows, pace, resets)`,
 			handler: async (_args, ctx) => {
 				try {
-					const next = await provider.query();
+					const next = await provider.query(ctx);
 					if (!next) {
 						ctx.ui.notify(`${provider.usageLabel}: usage unavailable`, "error");
 						return;

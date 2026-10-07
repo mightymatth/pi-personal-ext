@@ -11,20 +11,16 @@ import { fileURLToPath } from "node:url";
 import type {
 	ExtensionAPI,
 	ExtensionContext,
-} from "@mariozechner/pi-coding-agent";
-import { getAgentDir } from "@mariozechner/pi-coding-agent";
-import {
-	getPiPermissionSystemRuntimeApi,
-	type YoloModeControlResult,
-} from "pi-permission-system";
+} from "@earendil-works/pi-coding-agent";
+import { getAgentDir } from "@earendil-works/pi-coding-agent";
+import { name as EXTENSION_NAME } from "../package.json";
 
-const EXTENSION_NAME = "pi-personal-ext";
 const YOLO_SHORTCUT = "ctrl+shift+y";
 const EXTENSION_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const SOURCE_POLICY_PATH = join(EXTENSION_ROOT, "pi-permissions.jsonc");
 const TARGET_POLICY_PATH = join(getAgentDir(), "pi-permissions.jsonc");
 
-function getYoloMode(): boolean {
+export function getYoloMode(): boolean {
 	return getPiPermissionSystemRuntimeApi()?.getYoloMode() ?? false;
 }
 
@@ -139,3 +135,28 @@ export function registerPermissionControls(pi: ExtensionAPI): void {
 	registerYoloShortcut(pi);
 	registerStartupNotification(pi);
 }
+
+function getPiPermissionSystemRuntimeApi():
+	| PermissionSystemRuntime
+	| undefined {
+	return (
+		globalThis as typeof globalThis & {
+			__piPermissionSystem?: PermissionSystemRuntime;
+		}
+	).__piPermissionSystem;
+}
+
+type YoloModeControlResult = {
+	yoloMode: boolean;
+	changed: boolean;
+	persisted: boolean;
+	error?: string;
+};
+
+type PermissionSystemRuntime = {
+	getYoloMode(): boolean;
+	setYoloMode(
+		enabled: boolean,
+		options: { persist: boolean; source: string },
+	): YoloModeControlResult;
+};

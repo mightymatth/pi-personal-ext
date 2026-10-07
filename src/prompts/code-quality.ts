@@ -4,6 +4,7 @@
 // https://www.cl.cam.ac.uk/~afb21/CognitiveDimensions/CDtutorial.pdf
 export default `
 # Code readability and maintainability
+
 Write code to be understood and changed by humans—not merely executed.
 
 Make its purpose, control flow, and data flow easy to follow. Use meaningful names and a layout that reveals the structure.
