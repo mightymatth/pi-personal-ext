@@ -73,8 +73,8 @@ function queryCodexRateLimits() {
 }
 
 export const codexProvider: ProviderStatusConfig = {
-	provider: "openai-codex",
-	statusKey: "provider-openai-codex",
+	providers: ["openai", "openai-codex"],
+	statusKey: "provider-openai",
 	usageCommand: "codex-usage",
 	usageLabel: "Codex",
 	query: queryCodexRateLimits,

@@ -8,7 +8,7 @@ import { installPiPackages } from "./setup-packages";
 test("registered packages with missing files are reported missing", async () => {
 	const dir = await mkdtemp(join(tmpdir(), "personal-setup-"));
 	try {
-		// Empty managed directories prevent Pi from using legacy global installs.
+		// Empty managed directories prevent Pi from using global npm installs.
 		for (const name of REQUIRED_PACKAGES) {
 			await mkdir(join(dir, "npm", "node_modules", name), { recursive: true });
 		}

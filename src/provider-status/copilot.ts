@@ -172,7 +172,7 @@ async function queryCopilotUsage() {
 }
 
 export const copilotProvider: ProviderStatusConfig = {
-	provider: PROVIDER,
+	providers: [PROVIDER],
 	statusKey: "provider-github-copilot",
 	usageCommand: "copilot-usage",
 	usageLabel: "GitHub Copilot",

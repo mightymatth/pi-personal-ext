@@ -1,6 +1,9 @@
-import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import type {
+	ExtensionAPI,
+	ExtensionContext,
+} from "@earendil-works/pi-coding-agent";
 
-export type ExtensionContext = Parameters<Parameters<ExtensionAPI["on"]>[1]>[1];
+export type { ExtensionContext };
 
 export type RateLimitWindow = {
 	usedPercent: number;
@@ -19,7 +22,7 @@ export type ProviderSnapshotHandler = (
 ) => void;
 
 export type ProviderStatusConfig = {
-	provider: string;
+	providers: string[];
 	statusKey: string;
 	usageLabel: string;
 	usageCommand?: string;

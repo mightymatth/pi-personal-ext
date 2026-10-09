@@ -10,7 +10,7 @@ import {
 	unlink,
 } from "node:fs/promises";
 import { homedir } from "node:os";
-import { dirname, join, resolve } from "node:path";
+import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 
@@ -79,9 +79,8 @@ export async function installAll({
 	dryRun?: boolean;
 	log?: (message: string) => void;
 } = {}): Promise<void> {
-	const sourceDir = join(
-		dirname(fileURLToPath(import.meta.url)),
-		"vscode-extensions",
+	const sourceDir = fileURLToPath(
+		new URL("./vscode-extensions/", import.meta.url),
 	);
 	const destinationDir = join(homedir(), ".vscode", "extensions");
 	const entries = await readdir(sourceDir, { withFileTypes: true });

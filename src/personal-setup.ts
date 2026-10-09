@@ -1,4 +1,3 @@
-import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
 	type ExtensionAPI,
@@ -32,11 +31,7 @@ export function registerPersonalSetup(pi: ExtensionAPI): void {
 		description: "Set up required Pi extensions and bundled VS Code extensions",
 		handler: async (_args, ctx) => {
 			try {
-				const script = join(
-					dirname(fileURLToPath(import.meta.url)),
-					"..",
-					"setup.ts",
-				);
+				const script = fileURLToPath(new URL("../setup.ts", import.meta.url));
 				const result = await pi.exec("bun", ["run", script, "--installed"], {
 					timeout: 120_000,
 				});

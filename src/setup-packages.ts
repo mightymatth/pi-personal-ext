@@ -45,15 +45,13 @@ export async function installPiPackages({
 		target = localPath;
 	}
 	if (target !== undefined) target = resolve(target);
-	const registered = await registeredPackages(agentDir);
-	const named = await Promise.all(
-		registered.map(async (entry) => ({
-			...entry,
-			name: entry.path ? await packageName(entry.path) : undefined,
-		})),
-	);
+	const packages = await registeredPackages(agentDir);
+	const execute = async (command: string[]) => {
+		if (dryRun) log(`Would run: ${JSON.stringify(command)}`);
+		else await run(command);
+	};
 	const source = target ?? PERSONAL_GIT_SOURCE;
-	for (const entry of named) {
+	for (const entry of packages) {
 		if (!registerPersonalPackage || entry.name !== PERSONAL_PACKAGE) continue;
 		const matches = target
 			? entry.path !== undefined && samePath(entry.path, target)
@@ -70,32 +68,22 @@ export async function installPiPackages({
 			throw new Error(`Not a ${PERSONAL_PACKAGE} checkout: ${target}`);
 		}
 	} else if (target) {
-		const clone = ["git", "clone", PERSONAL_REPOSITORY, target];
-		const installDependencies = ["bun", "install", "--cwd", target];
-		if (dryRun) {
-			log(`Would run: ${JSON.stringify(clone)}`);
-			log(`Would run: ${JSON.stringify(installDependencies)}`);
-		} else {
-			await run(["mkdir", "-p", dirname(target)]);
-			await run(clone);
-			await run(installDependencies);
-		}
+		await execute(["mkdir", "-p", dirname(target)]);
+		await execute(["git", "clone", PERSONAL_REPOSITORY, target]);
+		await execute(["bun", "install", "--cwd", target]);
 	}
 
-	const install = async (packageSource: string) => {
-		const command = ["pi", "install", packageSource, "--no-approve"];
-		if (dryRun) log(`Would run: ${JSON.stringify(command)}`);
-		else await run(command);
-	};
+	const install = (source: string) =>
+		execute(["pi", "install", source, "--no-approve"]);
 
 	for (const name of REQUIRED_PACKAGES) {
-		const existing = named.find((entry) => entry.name === name);
+		const existing = packages.find((entry) => entry.name === name);
 		if (existing) {
 			log(`Already installed: ${name} (${existing.source}); unchanged`);
 			continue;
 		}
 		// Preserve even broken registrations rather than overwriting user choices.
-		const entry = registered.find(
+		const entry = packages.find(
 			(entry) =>
 				entry.source === `npm:${name}` ||
 				entry.source.startsWith(`npm:${name}@`),

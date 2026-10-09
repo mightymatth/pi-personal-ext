@@ -103,7 +103,7 @@ async function queryUsage(ctx: ExtensionContext) {
 }
 
 export const openCodeProvider: ProviderStatusConfig = {
-	provider: "opencode-go",
+	providers: ["opencode-go"],
 	statusKey: "provider-opencode-go",
 	usageCommand: "opencode-go-usage",
 	usageLabel: "OpenCode Go",

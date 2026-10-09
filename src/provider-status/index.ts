@@ -102,8 +102,8 @@ export function registerProviderStatus(pi: ExtensionAPI) {
 		ctx: ExtensionContext,
 		providerName: string | undefined,
 	) => {
-		const nextProvider = PROVIDERS.find(
-			({ provider }) => provider === providerName,
+		const nextProvider = PROVIDERS.find(({ providers }) =>
+			providers.includes(providerName ?? ""),
 		);
 		if (activeProvider === nextProvider) return;
 
