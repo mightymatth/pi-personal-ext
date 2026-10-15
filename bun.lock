@@ -6,6 +6,7 @@
       "name": "pi-personal-ext",
       "dependencies": {
         "commander": "^15.0.0",
+        "marked": "18.0.11",
       },
       "devDependencies": {
         "@biomejs/biome": "^2.4.13",

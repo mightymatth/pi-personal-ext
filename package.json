@@ -33,7 +33,8 @@
 		"skills": "bun run skills.ts"
 	},
 	"dependencies": {
-		"commander": "^15.0.0"
+		"commander": "^15.0.0",
+		"marked": "18.0.11"
 	},
 	"peerDependencies": {
 		"@earendil-works/pi-coding-agent": "^1.0.3"

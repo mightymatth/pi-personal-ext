@@ -1,0 +1,64 @@
+# Demo release update
+
+**All names, metrics, and links below are fictional.** Use this document to check rich-text pasting into Slack or another editor.
+
+## Summary
+
+The **Orchard demo service** is ready for a staging review. The update includes *faster searches*, **clearer error messages**, and a small `healthcheck` endpoint.
+
+Paragraph spacing should remain visible here—even when the destination ignores HTML margins. Unicode should survive too: “ready for review”, café, €12.50, and 🚀.
+
+## Progress
+
+- **Monday:** Added search filters and request validation.
+- **Tuesday:** Improved caching and wrote regression tests.
+- **Wednesday:** Prepared the staging build and updated the documentation.
+
+**Next steps:** review the staging build, collect feedback, and schedule the release.
+
+1. Open the [demo dashboard](https://example.com/dashboard).
+2. Run a search for `green apples`.
+3. Confirm the results, then leave a short review.
+
+## Basic table
+
+| Component | Status | Owner |
+| --- | --- | --- |
+| Search API | Ready | Team Amber |
+| Admin UI | In review | Team Violet |
+| Documentation | Draft | Team Indigo |
+
+## Metrics
+
+| Metric | Before | After |
+| --- | ---: | ---: |
+| Median latency | 180 ms | 95 ms |
+| Error rate | 1.2% | 0.4% |
+| Test cases | 48 | 72 |
+
+These are **sample numbers**, not production measurements.
+
+## Code and quotation
+
+Use `GET /health` for a quick status check:
+
+```json
+{
+  "service": "orchard-demo",
+  "status": "ok",
+  "checks": ["search", "cache"]
+}
+```
+
+> Keep the rollout small, observe the results, and expand only after the checks pass.
+
+## Formatting checklist
+
+- **Bold** and *italic* text remain distinct.
+- Paragraphs have blank lines between them.
+- List items stay together without extra blank lines.
+- Links remain clickable: [demo documentation](https://example.com/docs).
+- Inline code, fenced code, headings, and quotations remain readable.
+- Tables use content-sized, aligned `|` columns in a monospace block.
+
+**Bottom line:** this fixture is only a formatting demo. Nothing here refers to a real project or release.
