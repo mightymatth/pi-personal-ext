@@ -1,5 +1,7 @@
 import { spawn } from "node:child_process";
+
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+
 import { getYoloMode } from "./permissions";
 
 const FINISHED_SOUND = "/System/Library/Sounds/Glass.aiff";

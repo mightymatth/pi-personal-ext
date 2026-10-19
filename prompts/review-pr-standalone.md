@@ -2,6 +2,7 @@
 description: Check out and independently review a GitHub PR locally with GitHub CLI
 argument-hint: "<PR URL or number>"
 ---
+
 Perform a standalone, local-first review of GitHub PR `$1`. Do not use subagents.
 
 Use `gh` as the primary interface for GitHub: resolving PR/repository data, cloning, PR checkout, API data, checks, reviews, and comments. Use `git` only for local repository state, diffs, history, and validation. Do not post GitHub comments or submit a review.

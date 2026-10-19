@@ -75,7 +75,9 @@ async function queryUsage(ctx: ExtensionContext) {
 			signal: AbortSignal.timeout(QUERY_TIMEOUT_MS),
 		});
 	} catch (error) {
-		throw new Error(`OpenCode Go: usage request failed: ${errorText(error)}`);
+		throw new Error(`OpenCode Go: usage request failed: ${errorText(error)}`, {
+			cause: error,
+		});
 	}
 
 	if (response.status === 401) {
@@ -92,7 +94,9 @@ async function queryUsage(ctx: ExtensionContext) {
 	try {
 		payload = (await response.json()) as UsagePayload;
 	} catch (error) {
-		throw new Error(`OpenCode Go: usage response failed: ${errorText(error)}`);
+		throw new Error(`OpenCode Go: usage response failed: ${errorText(error)}`, {
+			cause: error,
+		});
 	}
 
 	const snapshot = buildSnapshot(payload);

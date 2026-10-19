@@ -1,6 +1,8 @@
 import { describe, expect, test } from "bun:test";
+
 import type { SessionEntry } from "@earendil-works/pi-coding-agent";
 import { visibleWidth } from "@earendil-works/pi-tui";
+
 import { lastAssistantText, markdownToHtml } from "./index";
 
 function assistant(content: unknown[], stopReason = "stop"): SessionEntry {

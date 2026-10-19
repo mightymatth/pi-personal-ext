@@ -1,8 +1,10 @@
 import { fileURLToPath } from "node:url";
+
 import {
 	type ExtensionAPI,
 	getAgentDir,
 } from "@earendil-works/pi-coding-agent";
+
 import { missingRequiredPackages } from "./setup-checks";
 import { hasCopyExtension, isVSCodeInstalled } from "./vscode-extensions";
 

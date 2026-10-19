@@ -1,0 +1,11 @@
+[fmt]
+useTabs = true
+printWidth = 80
+arrowParens = "always"
+sortImports = true
+# Managed by skills.ts; preserve upstream examples verbatim.
+ignorePatterns = [
+	"skills/opensrc/",
+	"skills/playwright-cli/",
+	"skills/handoff/",
+]

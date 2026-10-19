@@ -1,6 +1,8 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+
 import { getAgentDir } from "@earendil-works/pi-coding-agent";
+
 import { errorText } from "./format";
 import type { ProviderStatusConfig, RateLimitSnapshot } from "./types";
 
@@ -149,7 +151,9 @@ async function queryCopilotUsage() {
 			},
 		);
 	} catch (error) {
-		throw new Error(`GitHub Copilot: request failed: ${errorText(error)}`);
+		throw new Error(`GitHub Copilot: request failed: ${errorText(error)}`, {
+			cause: error,
+		});
 	}
 
 	if (response.status === 401) {
@@ -165,7 +169,9 @@ async function queryCopilotUsage() {
 	try {
 		user = (await response.json()) as CopilotUser;
 	} catch (error) {
-		throw new Error(`GitHub Copilot: response failed: ${errorText(error)}`);
+		throw new Error(`GitHub Copilot: response failed: ${errorText(error)}`, {
+			cause: error,
+		});
 	}
 
 	return buildSnapshot(user);

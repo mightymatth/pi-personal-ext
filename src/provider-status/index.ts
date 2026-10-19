@@ -1,4 +1,5 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+
 import { codexProvider } from "./codex";
 import { copilotProvider } from "./copilot";
 import {

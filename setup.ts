@@ -1,7 +1,9 @@
 #!/usr/bin/env bun
 import { homedir } from "node:os";
 import { join, resolve } from "node:path";
+
 import { Command } from "commander";
+
 import { installPiPackages } from "./src/setup-packages";
 import { installAll } from "./src/vscode-extensions";
 

@@ -30,6 +30,8 @@ bun run skills update opensrc
 
 ## Installation for development
 
+Requires Bun 1.4.4+ with native `fmt`, `lint`, and `check` commands (currently canary).
+
 Clone a local checkout and register it with Pi:
 
 ```bash
@@ -45,8 +47,19 @@ the bundled VS Code extensions. Use `--dry-run` to preview changes.
 After making changes:
 
 ```bash
-bun run check:fix
-bun test
+bun run check:fix # fix lint, format, then validate everything
+```
+
+Native commands are also available individually:
+
+```bash
+bun fmt          # format (tabs and sorted imports configured in bunfig.toml)
+bun fmt --check  # check formatting without writing
+bun lint         # lint
+bun lint --fix   # apply lint fixes
+bun check        # type-check using tsconfig.json
+bun test         # run tests
+bun run verify   # read-only formatting, lint (no warnings), types, and tests
 ```
 
 Run `/reload` in Pi to load your changes.

@@ -8,6 +8,7 @@ import type {
 	ExtensionAPI,
 	McpServerConfig,
 } from "@earendil-works/pi-coding-agent";
+
 import { mcpServers } from "./config/mcp.json";
 import { registerCopyRtf } from "./src/copy-rtf";
 import { registerPermissionToolsFix } from "./src/permission-tools-fix";

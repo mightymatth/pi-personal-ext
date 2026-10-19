@@ -1,10 +1,12 @@
 import { existsSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
+
 import { $ } from "bun";
+
 import {
 	packageName,
-	REQUIRED_PACKAGES,
 	registeredPackages,
+	REQUIRED_PACKAGES,
 	samePath,
 } from "./setup-checks";
 

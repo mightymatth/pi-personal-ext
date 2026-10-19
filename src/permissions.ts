@@ -8,11 +8,13 @@ import {
 } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+
 import type {
 	ExtensionAPI,
 	ExtensionContext,
 } from "@earendil-works/pi-coding-agent";
 import { getAgentDir } from "@earendil-works/pi-coding-agent";
+
 import { name as EXTENSION_NAME } from "../package.json";
 
 const YOLO_SHORTCUT = "ctrl+shift+y";
@@ -137,8 +139,7 @@ export function registerPermissionControls(pi: ExtensionAPI): void {
 }
 
 function getPiPermissionSystemRuntimeApi():
-	| PermissionSystemRuntime
-	| undefined {
+	PermissionSystemRuntime | undefined {
 	return (
 		globalThis as typeof globalThis & {
 			__piPermissionSystem?: PermissionSystemRuntime;

@@ -2,6 +2,7 @@ import { expect, test } from "bun:test";
 import { mkdir, mkdtemp, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+
 import { hasCopyExtension } from "./vscode-extensions";
 
 test("a copy-extension link with a missing target is not treated as installed", async () => {

@@ -4,7 +4,7 @@
 		"bash": "ask",
 		"mcp": "ask",
 		"skills": "ask",
-		"special": "ask"
+		"special": "ask",
 	},
 	// ---- Tools ----
 	// Pi built-in tools: read, write, edit, bash, ls, grep, find, mcp, task
@@ -18,7 +18,7 @@
 		"bash": "ask",
 		"mcp": "ask",
 		"web_search": "allow",
-		"web_fetch": "allow"
+		"web_fetch": "allow",
 	},
 	// ---- Bash ----
 	// These mirror your Claude Code allowed bash commands
@@ -116,7 +116,7 @@
 		"*mkfs *": "deny",
 		"dd *": "deny",
 		"* dd *": "deny",
-		":() *": "deny"
+		":() *": "deny",
 	},
 	// ---- MCP ----
 	// Map your Claude Code MCP tool permissions
@@ -136,18 +136,18 @@
 		"mcp_list": "allow",
 		"mcp_search": "allow",
 		"mcp_describe": "allow",
-		"mcp_connect": "allow"
+		"mcp_connect": "allow",
 	},
 	// ---- Skills ----
 	"skills": {
 		"*": "allow",
 		"playwright-cli": "allow",
-		"skill-creator": "allow"
+		"skill-creator": "allow",
 	},
 	// ---- Special ----
 	"special": {
 		"doom_loop": "deny",
 		"external_directory": "ask",
-		"tool_call_limit": "ask"
-	}
+		"tool_call_limit": "ask",
+	},
 }
