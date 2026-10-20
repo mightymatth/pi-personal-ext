@@ -12,6 +12,13 @@ Run `/personal-setup`.
 
 For a checkout you intend to edit, use the development installation below instead.
 
+## Commands
+
+- `/code` — open Pi's current project or worktree folder in VS Code using the
+  `code` CLI, without forcing a new window or replacing the last active window.
+  Requires `code` on `PATH`; on macOS, install it through VS Code's command palette
+  with **Shell Command: Install 'code' command in PATH**.
+
 ## MCP
 
 MCP servers are defined in `config/mcp.json` and registered when the extension loads.

@@ -10,6 +10,7 @@ import type {
 } from "@earendil-works/pi-coding-agent";
 
 import { mcpServers } from "./config/mcp.json";
+import { registerCode } from "./src/code";
 import { registerCopyRtf } from "./src/copy-rtf";
 import { registerPermissionToolsFix } from "./src/permission-tools-fix";
 import { registerPermissionControls } from "./src/permissions";
@@ -41,6 +42,7 @@ export default function (pi: ExtensionAPI) {
 	// After the codemode activation above, so it is part of the remembered selection.
 	registerPermissionToolsFix(pi);
 
+	registerCode(pi);
 	registerCopyRtf(pi);
 	registerPersonalSetup(pi);
 	registerGithubPrSelection(pi);
