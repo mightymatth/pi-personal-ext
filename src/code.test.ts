@@ -7,7 +7,7 @@ import type {
 
 import { registerCode } from "./code";
 
-test("/code opens the exact worktree path without window flags", async () => {
+test("/code opens the exact project path without window flags", async () => {
 	const { handler, ctx, exec, notify } = setup();
 
 	await handler("", ctx);
@@ -57,6 +57,16 @@ test("/code explains how to install a missing CLI", async () => {
 	);
 });
 
+test("unknown /code arguments show help without launching anything", async () => {
+	const { handler, ctx, exec, notify } = setup();
+	await handler("unknown", ctx);
+	expect(exec).not.toHaveBeenCalled();
+	expect(notify).toHaveBeenCalledWith(
+		expect.stringContaining("Usage:"),
+		"warning",
+	);
+});
+
 function setup() {
 	let command: Parameters<ExtensionAPI["registerCommand"]>[1] | undefined;
 	const exec = mock(async () => ({
@@ -78,7 +88,7 @@ function setup() {
 	} as unknown as ExtensionAPI);
 	if (!command) throw new Error("/code was not registered");
 	const ctx = {
-		cwd: "/projects/worktrees/feature with spaces",
+		cwd: "/projects/project with spaces",
 		ui: { notify },
 	} as unknown as ExtensionCommandContext;
 	return { handler: command.handler, ctx, exec, notify };

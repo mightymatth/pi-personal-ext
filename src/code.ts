@@ -2,8 +2,13 @@ import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 
 export function registerCode(pi: ExtensionAPI): void {
 	pi.registerCommand("code", {
-		description: "Open the current project or worktree in VS Code",
-		handler: async (_args, ctx) => {
+		description: "Open the current project folder in VS Code",
+		handler: async (args, ctx) => {
+			if (args.trim()) {
+				ctx.ui.notify("Usage: /code", "warning");
+				return;
+			}
+
 			try {
 				const result = await pi.exec("code", [ctx.cwd], {
 					timeout: 10_000,
