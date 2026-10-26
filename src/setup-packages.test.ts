@@ -41,6 +41,7 @@ test("conversation setup installs companions without reinstalling itself", async
 		expect(calls).toEqual([
 			["pi", "install", "npm:pi-permission-system", "--no-approve"],
 			["pi", "install", "npm:pi-web-access", "--no-approve"],
+			["pi", "install", "npm:pi-mcp-adapter", "--no-approve"],
 		]);
 	} finally {
 		await rm(agentDir, { recursive: true, force: true });

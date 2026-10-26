@@ -21,9 +21,8 @@ For a checkout you intend to edit, use the development installation below instea
 
 ## MCP
 
-MCP servers are defined in `config/mcp.json` and registered when the extension loads.
-Built-in MCP is the default. `pi-mcp-adapter` is not bundled; projects can enable
-it where server compatibility requires it.
+`/personal-setup` installs `pi-mcp-adapter`. Servers from `config/mcp.json`
+register when the extension loads; Pi and the adapter handle the integration.
 
 ## Skills
 
