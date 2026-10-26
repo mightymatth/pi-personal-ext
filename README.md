@@ -14,10 +14,7 @@ For a checkout you intend to edit, use the development installation below instea
 
 ## Commands
 
-- `/code` — open Pi's current project or worktree folder in VS Code using the
-  `code` CLI, without forcing a new window or replacing the last active window.
-  Requires `code` on `PATH`; on macOS, install it through VS Code's command palette
-  with **Shell Command: Install 'code' command in PATH**.
+- `/code` — open the current project folder in VS Code. Requires `code` on `PATH`.
 
 ## MCP
 
