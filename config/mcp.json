@@ -7,12 +7,10 @@
 				"@playwright/mcp@latest",
 				"--cdp-endpoint",
 				"ws://localhost:9222"
-			],
-			"exposure": "codemode"
+			]
 		},
 		"notion": {
-			"url": "https://mcp.notion.com/mcp",
-			"exposure": "codemode"
+			"url": "https://mcp.notion.com/mcp"
 		}
 	}
 }
