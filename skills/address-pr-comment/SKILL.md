@@ -32,13 +32,18 @@ From the response, extract: `body` (reviewer's text), `path` (file), `line`/`ori
 
 **Check for thread context.** The comment might be part of a conversation — the reviewer may have added clarifications in replies, or there may be a back-and-forth that changes what's being asked. Fetch the review thread to see the full picture:
 
-```
-gh api repos/{owner}/{repo}/pulls/{pr_number}/comments | jq '[.[] | select(.in_reply_to_id == {comment_id} or .id == {comment_id})]'
+Use the fetched comment's `in_reply_to_id` as `root_id`, or its own `id` if it is the root. Fetch every page, then select the root and its replies in chronological order:
+
+```bash
+gh api --paginate --slurp repos/{owner}/{repo}/pulls/{pr_number}/comments \
+  | jq --argjson root {root_id} 'add | map(select(.id == $root or .in_reply_to_id == $root)) | sort_by(.created_at)'
 ```
 
-If there are replies, read them all — the latest reply often contains the most specific ask.
+Read the entire thread — the latest reply often contains the most specific ask. Use `root_id` when posting a reply. Also paginate when fetching all PR comments.
 
 ### 2. Read and understand context
+
+Before editing, check `git status --short` and confirm the current branch matches the PR head branch. If it does not, stop and ask how to proceed; do not switch branches automatically. Preserve existing user changes and ask before editing overlapping changes.
 
 Read the commented file to understand the full picture — not just the line, but the surrounding logic. If the comment references other files, types, or functions, read those too. The goal is to understand the reviewer's intent in context, not just in isolation.
 
@@ -93,7 +98,7 @@ If a check fails because of the change, fix it and rerun. Report unrelated failu
 Show the user:
 
 - Which files changed (a brief summary, not the full diff)
-- That build/tests/lint all passed
+- Validation results, including any failures or checks that could not run
 - The reply message that will be posted
 
 Ask for permission to commit, push, and reply.
@@ -108,12 +113,12 @@ Once approved, run everything in sequence — each step must complete before the
 4. **Reply** — reply to the comment referencing the commit:
    ```
    gh api repos/{owner}/{repo}/pulls/{pr_number}/comments \
-     -F in_reply_to={comment_id} \
+     -F in_reply_to={root_id} \
      -f body="Thanks, addressed in {short_sha}"
    ```
    A brief clarification of what changed is fine, but keep it to one sentence max.
 
-For question-only comments (no code change), skip steps 1-2 and just post the reply.
+For question-only comments (no code change), skip staging, committing, and pushing; just post the approved reply.
 
 ## Handling multiple comments
 
