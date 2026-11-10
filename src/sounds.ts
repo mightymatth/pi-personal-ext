@@ -2,15 +2,29 @@ import { spawn } from "node:child_process";
 
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 
-const FINISHED_SOUND = "/System/Library/Sounds/Glass.aiff";
-const INPUT_NEEDED_SOUND = "/System/Library/Sounds/Ping.aiff";
-const INPUT_NEEDED_COOLDOWN_MS = 1_000;
-
-let lastInputNeededSoundAt = 0;
-
-function playSound(path: string): void {
+export function registerSounds(pi: ExtensionAPI): void {
 	if (process.platform !== "darwin") return;
-	const child = spawn("afplay", [path], {
+	// Herdr handles its own sounds; avoid playing them twice.
+	if (process.env.HC_TERMINAL_ID) return;
+
+	pi.on("agent_end", (_event, ctx) => {
+		if (ctx.mode === "tui") playSound(Sounds.FINISHED);
+	});
+
+	pi.on("ui_prompt_start", (_event, ctx) => {
+		if (ctx.mode === "tui") playSound(Sounds.INPUT_NEEDED);
+	});
+}
+
+function playSound(sound: Sounds): void {
+	if (sound === Sounds.INPUT_NEEDED) {
+		const now = Date.now();
+		// Batched permission prompts should only ping once per second.
+		if (now - lastInputNeededSoundAt < 1_000) return;
+		lastInputNeededSoundAt = now;
+	}
+
+	const child = spawn("afplay", [sound], {
 		detached: true,
 		stdio: "ignore",
 	});
@@ -18,21 +32,9 @@ function playSound(path: string): void {
 	child.unref();
 }
 
-function playInputNeededSound(): void {
-	const now = Date.now();
-	// Parallel or batched tool calls can trigger multiple permission prompts in
-	// quick succession. Suppress duplicate pings for the same "needs input" moment.
-	if (now - lastInputNeededSoundAt < INPUT_NEEDED_COOLDOWN_MS) return;
-
-	lastInputNeededSoundAt = now;
-	playSound(INPUT_NEEDED_SOUND);
+enum Sounds {
+	FINISHED = "/System/Library/Sounds/Glass.aiff",
+	INPUT_NEEDED = "/System/Library/Sounds/Ping.aiff",
 }
 
-export function registerSounds(pi: ExtensionAPI): void {
-	// Pi lifecycle equivalent of Claude Code's Stop hook.
-	pi.on("agent_end", () => {
-		playSound(FINISHED_SOUND);
-	});
-
-	pi.on("ui_prompt_start", playInputNeededSound);
-}
+let lastInputNeededSoundAt = 0;
