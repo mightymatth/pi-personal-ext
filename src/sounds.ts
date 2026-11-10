@@ -2,8 +2,6 @@ import { spawn } from "node:child_process";
 
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 
-import { getYoloMode } from "./permissions";
-
 const FINISHED_SOUND = "/System/Library/Sounds/Glass.aiff";
 const INPUT_NEEDED_SOUND = "/System/Library/Sounds/Ping.aiff";
 const INPUT_NEEDED_COOLDOWN_MS = 1_000;
@@ -36,11 +34,5 @@ export function registerSounds(pi: ExtensionAPI): void {
 		playSound(FINISHED_SOUND);
 	});
 
-	// Pi has no global "UI prompt opened" hook. Register this before the
-	// permission system so permission-gated tool calls ping before its select()
-	// dialog waits for user input.
-	pi.on("tool_call", () => {
-		if (getYoloMode()) return;
-		playInputNeededSound();
-	});
+	pi.on("ui_prompt_start", playInputNeededSound);
 }

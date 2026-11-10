@@ -1,163 +1,73 @@
-import {
-	existsSync,
-	lstatSync,
-	mkdirSync,
-	readlinkSync,
-	symlinkSync,
-	unlinkSync,
-} from "node:fs";
-import { dirname, join, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
-
-import type {
-	ExtensionAPI,
-	ExtensionContext,
-} from "@earendil-works/pi-coding-agent";
-import { getAgentDir } from "@earendil-works/pi-coding-agent";
-
-import { name as EXTENSION_NAME } from "../package.json";
-
-const YOLO_SHORTCUT = "ctrl+shift+y";
-const EXTENSION_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const SOURCE_POLICY_PATH = join(EXTENSION_ROOT, "pi-permissions.jsonc");
-const TARGET_POLICY_PATH = join(getAgentDir(), "pi-permissions.jsonc");
-
-export function getYoloMode(): boolean {
-	return getPiPermissionSystemRuntimeApi()?.getYoloMode() ?? false;
-}
-
-function yoloApiUnavailableResult(): YoloModeControlResult {
-	return {
-		yoloMode: false,
-		changed: false,
-		persisted: false,
-		error: "pi-permission-system runtime API is unavailable.",
-	};
-}
-
-function setYoloMode(enabled: boolean): YoloModeControlResult {
-	const api = getPiPermissionSystemRuntimeApi();
-	if (!api) return yoloApiUnavailableResult();
-
-	return api.setYoloMode(enabled, {
-		persist: true,
-		source: EXTENSION_NAME,
-	});
-}
-
-function toggleYoloMode(): YoloModeControlResult {
-	const api = getPiPermissionSystemRuntimeApi();
-	if (!api) return yoloApiUnavailableResult();
-
-	return setYoloMode(!api.getYoloMode());
-}
-
-function notifyYoloMode(ctx: ExtensionContext, yoloMode: boolean): void {
-	ctx.ui.notify(
-		yoloMode
-			? "🔓 YOLO mode ON — ask rules auto-approved"
-			: "🔒 Safe mode ON — ask rules will prompt",
-		"info",
-	);
-}
-
-function handleYoloShortcut(ctx: ExtensionContext): void {
-	const result = toggleYoloMode();
-	if (result.error) {
-		ctx.ui.notify(`Failed to toggle YOLO mode: ${result.error}`, "error");
-		return;
-	}
-
-	notifyYoloMode(ctx, result.yoloMode);
-}
-
-function registerYoloShortcut(pi: ExtensionAPI): void {
-	pi.registerShortcut(YOLO_SHORTCUT, {
-		description: "Toggle permission YOLO mode (skip ask / ask)",
-		handler: handleYoloShortcut,
-	});
-}
-
-function resolveLinkTarget(linkPath: string): string {
-	return resolve(dirname(TARGET_POLICY_PATH), linkPath);
-}
-
-function ensurePermissionPolicySymlink(ctx?: ExtensionContext): void {
-	try {
-		mkdirSync(dirname(TARGET_POLICY_PATH), { recursive: true });
-
-		if (existsSync(TARGET_POLICY_PATH)) {
-			const stats = lstatSync(TARGET_POLICY_PATH);
-			if (stats.isSymbolicLink()) {
-				const currentTargetPath = resolveLinkTarget(
-					readlinkSync(TARGET_POLICY_PATH),
-				);
-				if (currentTargetPath === SOURCE_POLICY_PATH) {
-					return;
-				}
-
-				unlinkSync(TARGET_POLICY_PATH);
-			} else {
-				ctx?.ui.notify(
-					`Permission policy link not installed: '${TARGET_POLICY_PATH}' exists and is not a symlink.`,
-					"warning",
-				);
-				return;
-			}
-		}
-
-		symlinkSync(SOURCE_POLICY_PATH, TARGET_POLICY_PATH);
-	} catch (error) {
-		const message = error instanceof Error ? error.message : String(error);
-		ctx?.ui.notify(
-			`Failed to ensure permission policy symlink: ${message}`,
-			"error",
-		);
-	}
-}
-
-function registerStartupNotification(pi: ExtensionAPI): void {
-	pi.on("session_start", (_event, ctx) => {
-		ensurePermissionPolicySymlink(ctx);
-		ctx.ui.notify(
-			`${EXTENSION_NAME} loaded! Permissions: ${getYoloMode() ? "🔓 YOLO" : "🔒 Safe"} (${YOLO_SHORTCUT} to toggle)`,
-			"info",
-		);
-	});
-
-	pi.on("resources_discover", (event, ctx) => {
-		if (event.reason === "reload") {
-			ensurePermissionPolicySymlink(ctx);
-		}
-	});
-}
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 
 export function registerPermissionControls(pi: ExtensionAPI): void {
-	ensurePermissionPolicySymlink();
-	registerYoloShortcut(pi);
-	registerStartupNotification(pi);
-}
+	let guarded = false;
+	let approvalQueue = Promise.resolve();
 
-function getPiPermissionSystemRuntimeApi():
-	PermissionSystemRuntime | undefined {
-	return (
-		globalThis as typeof globalThis & {
-			__piPermissionSystem?: PermissionSystemRuntime;
+	pi.on("session_start", (_event, ctx) => {
+		guarded = false;
+		ctx.ui.setStatus("permissions", "yolo");
+	});
+
+	pi.registerCommand("guard", {
+		description: "Toggle YOLO / Guard mode (confirm dangerous bash commands)",
+		handler: async (_args, ctx) => {
+			guarded = !guarded;
+			const mode = guarded ? "guard" : "yolo";
+			ctx.ui.setStatus("permissions", mode);
+			ctx.ui.notify(`${mode} mode`, "info");
+		},
+	});
+
+	pi.on("tool_call", async (event, ctx) => {
+		if (!guarded || event.toolName !== "bash") return;
+		const command = event.input.command;
+		if (typeof command !== "string") return;
+		if (!DANGEROUS_COMMANDS.some((pattern) => pattern.test(command))) return;
+
+		if (!ctx.hasUI) {
+			return {
+				block: true,
+				reason: "Guard: dangerous bash command requires approval (no UI).",
+			};
 		}
-	).__piPermissionSystem;
+
+		// Codemode can call bash concurrently; do not let dialogs replace each other.
+		const approval = approvalQueue.then(() =>
+			ctx.ui.select(`Guard: allow this bash command?\n\n${command}`, [
+				"Deny",
+				"Allow once",
+			]),
+		);
+		approvalQueue = approval.then(
+			() => {},
+			() => {},
+		);
+		if ((await approval) !== "Allow once") {
+			return { block: true, reason: "Guard: bash command denied by user." };
+		}
+	});
 }
 
-type YoloModeControlResult = {
-	yoloMode: boolean;
-	changed: boolean;
-	persisted: boolean;
-	error?: string;
-};
-
-type PermissionSystemRuntime = {
-	getYoloMode(): boolean;
-	setYoloMode(
-		enabled: boolean,
-		options: { persist: boolean; source: string },
-	): YoloModeControlResult;
-};
+// Best-effort tripwires, not a shell parser: scripts/aliases can hide operations,
+// and quoted examples can trigger approval. Scan the whole command, including chains.
+const DANGEROUS_COMMANDS = [
+	// Deletion, privilege changes, and disk writes.
+	/(?:^|[\s/;&|(`"'])(?:rm|rmdir|unlink|shred|sudo|doas|chmod|chown|mkfs(?:\.[\w-]+)?|dd|diskutil)\b/,
+	/\bfind\b[^\n;&|]*\s-delete\b/,
+	/:\s*\(\s*\)\s*\{/, // Shell fork bomb.
+	// Local history/worktree loss and remote git changes.
+	/\bgit\s+(?:-C\s+\S+\s+)*(?:push|clean)\b/,
+	/\bgit\s+(?:-C\s+\S+\s+)*reset\b[^\n;&|]*--hard\b/,
+	/\bgit\s+(?:-C\s+\S+\s+)*(?:checkout|restore)\s/,
+	/\bgit\s+(?:-C\s+\S+\s+)*branch\b[^\n;&|]*\s-[dD]\b/,
+	/\bgit\s+(?:-C\s+\S+\s+)*stash\s+(?:drop|clear)\b/,
+	// Publishing and deployment.
+	/\b(?:npm|pnpm|bun)\s+(?:publish|unpublish)\b/,
+	/\byarn\s+(?:npm\s+)?publish\b/,
+	/\b(?:deploy|terraform\s+(?:apply|destroy)|kubectl\s+(?:apply|delete|replace)|pulumi\s+(?:up|destroy))\b/,
+	// GitHub mutations, including API requests with implicit POST via fields.
+	/\bgh\s+(?:pr|issue|release|repo)\s+(?:create|edit|merge|close|delete|archive|rename|transfer)\b/,
+	/\bgh\s+api\b[^\n;&|]*\s(?:--method[=\s]+|-X\s*)["']?(?:POST|PUT|PATCH|DELETE)\b/,
+	/\bgh\s+api\b[^\n;&|]*\s(?:-[fF]|--(?:raw-)?field(?:\s|=))/,
+];

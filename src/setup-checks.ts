@@ -8,11 +8,7 @@ import {
 	SettingsManager,
 } from "@earendil-works/pi-coding-agent";
 
-export const REQUIRED_PACKAGES = [
-	"pi-permission-system",
-	"pi-web-access",
-	"pi-mcp-adapter",
-];
+export const REQUIRED_PACKAGES = ["pi-web-access", "pi-mcp-adapter"];
 type InstalledPackage = { source: string; path?: string; name?: string };
 
 export async function registeredPackages(
