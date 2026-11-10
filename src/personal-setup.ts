@@ -1,10 +1,9 @@
-import { fileURLToPath } from "node:url";
-
 import {
 	type ExtensionAPI,
 	getAgentDir,
 } from "@earendil-works/pi-coding-agent";
 
+import { runSetup } from "./setup";
 import { missingRequiredPackages } from "./setup-checks";
 import { hasCopyExtension, isVSCodeInstalled } from "./vscode-extensions";
 
@@ -32,21 +31,15 @@ export function registerPersonalSetup(pi: ExtensionAPI): void {
 	pi.registerCommand("personal-setup", {
 		description: "Set up required Pi extensions and bundled VS Code extensions",
 		handler: async (_args, ctx) => {
+			const output: string[] = [];
 			try {
-				const script = fileURLToPath(new URL("../setup.ts", import.meta.url));
-				const result = await pi.exec("bun", ["run", script, "--installed"], {
-					timeout: 120_000,
+				await runSetup({
+					installed: true,
+					log: (message) => output.push(message),
 				});
-				if (result.killed || result.code !== 0) {
-					throw new Error(
-						result.stderr.trim() ||
-							result.stdout.trim() ||
-							"Setup failed or timed out",
-					);
-				}
 				pi.sendMessage({
 					customType: "personal-setup",
-					content: result.stdout.trim(),
+					content: output.join("\n"),
 					display: true,
 				});
 			} catch (error) {

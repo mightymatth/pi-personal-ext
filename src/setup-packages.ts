@@ -1,7 +1,7 @@
+import { execFile } from "node:child_process";
 import { existsSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
-
-import { $ } from "bun";
+import { promisify } from "node:util";
 
 import {
 	packageName,
@@ -15,14 +15,30 @@ const PERSONAL_REPOSITORY =
 	"https://github.com/mightymatth/pi-personal-ext.git";
 const PERSONAL_GIT_SOURCE = "git:github.com/mightymatth/pi-personal-ext";
 
-async function runCommand(command: string[]): Promise<string> {
-	console.log(command.map((argument) => JSON.stringify(argument)).join(" "));
-	const output = await $`${command}`
-		.env({ ...process.env, NO_COLOR: "1", FORCE_COLOR: "0" })
-		.quiet()
-		.text();
-	if (output.trim()) console.log(output.trimEnd());
-	return output;
+async function runCommand(
+	command: string[],
+	log: (message: string) => void = console.log,
+): Promise<string> {
+	const [file = "", ...args] = command;
+	log(command.map((argument) => JSON.stringify(argument)).join(" "));
+	try {
+		const { stdout } = await promisify(execFile)(file, args, {
+			env: { ...process.env, NO_COLOR: "1", FORCE_COLOR: "0" },
+			timeout: 300_000,
+		});
+		if (stdout.trim()) log(stdout.trimEnd());
+		return stdout;
+	} catch (error) {
+		const { code, stderr, message } = error as NodeJS.ErrnoException & {
+			stderr?: string;
+		};
+		if (code === "ENOENT") {
+			throw new Error(`\`${file}\` is not installed or not on PATH.`, {
+				cause: error,
+			});
+		}
+		throw new Error(stderr?.trim() || message, { cause: error });
+	}
 }
 
 export async function installPiPackages({
@@ -30,8 +46,8 @@ export async function installPiPackages({
 	localPath,
 	dryRun = false,
 	registerPersonalPackage = true,
-	run = runCommand,
 	log = console.log,
+	run = (command) => runCommand(command, log),
 }: {
 	agentDir: string;
 	localPath?: string | true;

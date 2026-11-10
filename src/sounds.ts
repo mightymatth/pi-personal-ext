@@ -11,11 +11,12 @@ const INPUT_NEEDED_COOLDOWN_MS = 1_000;
 let lastInputNeededSoundAt = 0;
 
 function playSound(path: string): void {
+	if (process.platform !== "darwin") return;
 	const child = spawn("afplay", [path], {
 		detached: true,
 		stdio: "ignore",
 	});
-
+	child.on("error", () => {});
 	child.unref();
 }
 
